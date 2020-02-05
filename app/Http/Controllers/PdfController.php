@@ -10,12 +10,13 @@ use PDF;
 class PdfController extends Controller {
 
     public function toPdf() {
-
+        
         $user = Auth::user()->name;
   
         $model = new ReportController;
         $signatures = $model->getLastSignatureOrginalArray(Auth::user()->id);
         $signature = $signatures[0];
+
         $link = Storage::path('public/ratrak' . DIRECTORY_SEPARATOR . Auth::user()->id . DIRECTORY_SEPARATOR . $signature);
       
 

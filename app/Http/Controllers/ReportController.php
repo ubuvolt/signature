@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\CentralSetting;
 //
 use Image;
 use PDF;
@@ -83,8 +84,13 @@ class ReportController extends Controller {
             File::Delete($path . $pngFileName);
             
         }
-//                $users = DB::table('users')->get();
-//                $users = DB::select('select * from users where id = 2');
+        
+        $set = new \stdClass();
+        $set->colorPage = '#FFF03F';
+        $set->fontSize = '12';
+        $set->background = 'http://signature.wolscy.com/storage/app/public/ratrak/6968732-lake-mountains-view.jpg';
+
+        Auth::user()->setSettings(CentralSetting::E_SIGNATURE, $set);
          
 
         return response()->json(true);

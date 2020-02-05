@@ -39,11 +39,8 @@ class AuthController extends Controller {
 
         if (Auth::attempt($credentials)) {
 
-//            $settingsPdfReport = Auth::user()->getSettings(CentralSetting::E_SIGNATURE);
+            $settingsPdfReport = Auth::user()->getSettings(CentralSetting::E_SIGNATURE);
             
-//            dump($settingsPdfReport);
-
-
             $signatute_status = DB::Table('users')->select('signature')->where('id', Auth::user()->id)->first();
 
             if ($signatute_status->signature) {
@@ -58,7 +55,7 @@ class AuthController extends Controller {
 
             return view('dashboard', [
                 'signature' => $signature,
-//                'settingsPdfReport' => $settingsPdfReport,
+                'settingsPdfReport' => $settingsPdfReport,
             ]);
         }
 
