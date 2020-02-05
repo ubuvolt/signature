@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="{{url('style.css')}}">
 
         <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
@@ -16,17 +16,17 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/additional-methods.min.js"></script>
 
     </head>
-    <body style="background: #BC9B78">
+    <body style="background:{{  $settingsPdfReport['colorPage']?$settingsPdfReport['colorPage'] : '#BC9B78' }} ">
         <div class="container-fluid">
             <div class="row no-gutter">
-                <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image" style="height: 700px;"></div>
+                <div class="d-none d-md-flex col-md-4 col-lg-6 " style=" background-image: url({{  $settingsPdfReport['background']?$settingsPdfReport['background']:'https://s3-us-west-2.amazonaws.com/s.cdpn.io/28963/form-bk.jpg' }}); height: 1000px;"></div>
                 <div class="col-md-8 col-lg-6">
                     <div class="login d-flex align-items-center py-5">
                         <div class="container">
                             <div class="row">
-                                <div class="col-md-9 col-lg-8 mx-auto">
+                                <div class="col-md-10 mx-auto">
 
-                                    <div class="mb-4 col-md-8" style="background: #BC9B78; padding: 15px;">
+                                    <div class="mb-4" style="background:{{  $settingsPdfReport['colorPage']?$settingsPdfReport['colorPage']:'#BC9B78' }} ; padding: 15px;">
                                         <h3 class="login-heading" style="margin-bottom: 50px;">Welcome {{ ucfirst(Auth()->user()->name) }} !</h3>
                                         <div class="row ">
 
@@ -37,16 +37,19 @@
                                             @endphp
                                             <div class="col-md-12 mt-4">
                                                 <div class="col-md-12 grid-margin stretch-card">
-                                                    <div class="card">
+                                                    <div class="card_">
                                                         <div class="card-body ">
 
                                                             Your signature: 
-                                                            
-                                                            <img  width="130" height="90"class="img-fluid img-thumbnail signatureBox" src="{{ $protocol }}://{{ $domainName }}storage/app/public/ratrak/{{Auth::user()->id}}/thumbnail/{{ $signature }}" alt="Signature Thumbnail">
+
+                                                            <img  width="130" height="90"class="img-fluid img-thumbnail signatureBox m-8" src="{{ $protocol }}://{{ $domainName }}storage/app/public/ratrak/{{Auth::user()->id}}/thumbnail/{{ $signature }}" alt="Signature Thumbnail">
 
                                                             <div class="col-md-12" style="margin:20px 0 ;">
-                                                                <a class="btn btn-lg btn-primary btn-block btn-login text-uppercase" href="{{ route('toPdf') }}" 
-                                                                   style="border-radius: 60px; font-size:12px"role="button">Generate report</a>
+                                                                <a href="{{ route('toPdf') }}"role="button">
+                                                                    <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" style="font-size:16px;" type="submit">
+                                                                        Generate report
+                                                                    </button>
+                                                                </a>
                                                             </div>
                                                             <div>
                                                             </div>
@@ -57,14 +60,14 @@
                                                     @if(!$signature)
                                                     <div class="col-md-12">
                                                         <div class="col-md-12 grid-margin stretch-card">
-                                                            <div class="card">
+                                                            <div class="card_">
                                                                 <div class="card-body">
 
 
                                                                     <div style="clear: left;">
-                                                                        <h4 class="text-dark">
-                                                                            <u>Please, define the signature to generate report</u>
-                                                                        </h4>
+                                                                        <h5 class="text-dark">
+                                                                            Please, define the signature to generate report.
+                                                                        </h5>
 
                                                                         <div id="signature-pad">
                                                                             <div style="border: solid 1px black; margin-bottom: 10px">
@@ -84,15 +87,15 @@
                                                         </div>
 
                                                         <div class="col-md-12 grid-margin stretch-card">
-                                                            <div class="card" style="border: none;">
+                                                            <div class="card_" style="border: none;">
                                                                 <div class="card-body p-2">
                                                                     <div class="row">
                                                                         <div class="col-md-12 grid-margin stretch-card">
-                                                                            <div class="card" style="border: none;">
+                                                                            <div class="card_" style="border: none;">
                                                                                 <div class="card-body p-2">                
-                                                                                    <h4 class="text-dark">
-                                                                                        <u>Description</u> 
-                                                                                    </h4>
+                                                                                    <h5 class="text-dark">
+                                                                                        Description: 
+                                                                                    </h5>
                                                                                     <p>
                                                                                         An e-signature (electronic signature) is a digital version of a traditional pen and ink signature.
                                                                                     </p>
@@ -128,7 +131,9 @@
 
                 </body>
                 </html>
-
+                <style>
+                    .bg-image_{}
+                </style>
 
                 <script>
 $(function () {

@@ -10,4 +10,7 @@
                 </p>
 
                 <br>
-                <img  width="130" height="90"class="img-fluid img-thumbnail" src="{{ $link }}" alt="Signature Thumbnail">
+                <div style="float:right" >
+                    <p>Your signature</p>
+                    <img  width="130" height="90"class="img-fluid img-thumbnail" src="{{ $link }}" alt="Signature Thumbnail">
+                </div>
