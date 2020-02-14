@@ -4,16 +4,13 @@ namespace App\Http\Controllers;
 
 //
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\CentralSetting;
 //
 use Image;
-use PDF;
 
 class ReportController extends Controller {
 
@@ -75,23 +72,52 @@ class ReportController extends Controller {
             chmod($path . $encFileName, 0755);
             usleep(500000);
 
-            
+
             DB::table('users')->where('id', $userId)->update(['signature' => 1]);
 
             /**
              * Deleting the original PNG file
              */
             File::Delete($path . $pngFileName);
-            
+        }
+
+        $delete = DB::table('centralSetting')
+                ->where([['userId', '=', $userId], ['actionType', '=', CentralSetting::IN_PROCESS],])
+                ->delete();
+
+        if ($delete) {
+            $set = new \stdClass();
+            $set->colorPage = '#9bcbe1';
+            $set->fontSize = '12';
+            $set->background = '/storage/app/public/ratrak/reiseuhu-CXwnP8jO34M-unsplash.jpg';
+            Auth::user()->setSettings(CentralSetting::RE_E_SIGNATURE, $set);
+        } else {
+            $set = new \stdClass();
+            $set->colorPage = '#FFF03F';
+            $set->fontSize = '12';
+            $set->background = '/storage/app/public/ratrak/6968732-lake-mountains-view.jpg';
+            Auth::user()->setSettings(CentralSetting::E_SIGNATURE, $set);
         }
         
-        $set = new \stdClass();
-        $set->colorPage = '#FFF03F';
-        $set->fontSize = '12';
-        $set->background = 'http://signature.wolscy.com/storage/app/public/ratrak/6968732-lake-mountains-view.jpg';
 
-        Auth::user()->setSettings(CentralSetting::E_SIGNATURE, $set);
-         
+
+        return response()->json(true);
+    }
+
+    /**
+     * 
+     * @param Request $request
+     * @return type
+     */
+    public function redefineSignature(Request $request) {
+
+        DB::table('users')->where('id', $request->userId)->update(['signature' => 0]);
+
+        DB::table('centralSetting')
+                ->where([['userId', '=', $request->userId], ['actionType', '=', CentralSetting::E_SIGNATURE],])
+                ->update(['actionType' => CentralSetting::IN_PROCESS]);
+
+
 
         return response()->json(true);
     }

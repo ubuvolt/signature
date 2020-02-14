@@ -39,10 +39,25 @@ class AuthController extends Controller {
 
         if (Auth::attempt($credentials)) {
 
-            $settingsPdfReport = Auth::user()->getSettings(CentralSetting::E_SIGNATURE);
+            $comment="Please, define the signature to generate report.";
+            $settingsPdfReport = false;
             
+            if (Auth::user()->getSettings(CentralSetting::IN_PROCESS)) {
+                $comment="Please, re - define the signature to generate report";
+                $settingsPdfReport = false;
+            } 
+            if(Auth::user()->getSettings(CentralSetting::E_SIGNATURE)) {
+                $settingsPdfReport = Auth::user()->getSettings(CentralSetting::E_SIGNATURE);
+                $comment="";
+            }
+            if(Auth::user()->getSettings(CentralSetting::RE_E_SIGNATURE)) {
+                $settingsPdfReport = Auth::user()->getSettings(CentralSetting::RE_E_SIGNATURE);
+                $comment= CentralSetting::CONTACT;
+            }
+
             $signatute_status = DB::Table('users')->select('signature')->where('id', Auth::user()->id)->first();
 
+            
             if ($signatute_status->signature) {
 
                 $controller = new ReportController;
@@ -52,10 +67,11 @@ class AuthController extends Controller {
             } else {
                 $signature = 0;
             }
-
+            
             return view('dashboard', [
                 'signature' => $signature,
                 'settingsPdfReport' => $settingsPdfReport,
+                'comment' => $comment,
             ]);
         }
 
@@ -87,8 +103,6 @@ class AuthController extends Controller {
             return view('dashboard', [
 //                'signature' => $report[0],
             ]);
-
-
         }
         return Redirect::to("login")->withSuccess('Successful registration');
     }
